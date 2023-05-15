@@ -66408,8 +66408,9 @@ function installLint(versionConfig) {
         const archivePath = yield tc.downloadTool(assetURL);
         let extractedDir = "";
         let repl = /\.tar\.gz$/;
+        const installPath = core.getInput("install-path") || process.env.HOME;
         if (assetURL.endsWith("zip")) {
-            extractedDir = yield tc.extractZip(archivePath, process.env.HOME);
+            extractedDir = yield tc.extractZip(archivePath, installPath);
             repl = /\.zip$/;
         }
         else {
@@ -66418,7 +66419,7 @@ function installLint(versionConfig) {
             if (process.platform.toString() != "darwin") {
                 args.push("--overwrite");
             }
-            extractedDir = yield tc.extractTar(archivePath, process.env.HOME, args);
+            extractedDir = yield tc.extractTar(archivePath, installPath, args);
         }
         const urlParts = assetURL.split(`/`);
         const dirName = urlParts[urlParts.length - 1].replace(repl, ``);

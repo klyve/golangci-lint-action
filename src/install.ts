@@ -40,8 +40,11 @@ export async function installLint(versionConfig: VersionConfig): Promise<string>
   const archivePath = await tc.downloadTool(assetURL)
   let extractedDir = ""
   let repl = /\.tar\.gz$/
+
+  const installPath = core.getInput("install-path") || process.env.HOME
+
   if (assetURL.endsWith("zip")) {
-    extractedDir = await tc.extractZip(archivePath, process.env.HOME)
+    extractedDir = await tc.extractZip(archivePath, installPath)
     repl = /\.zip$/
   } else {
     // We want to always overwrite files if the local cache already has them
@@ -49,7 +52,7 @@ export async function installLint(versionConfig: VersionConfig): Promise<string>
     if (process.platform.toString() != "darwin") {
       args.push("--overwrite")
     }
-    extractedDir = await tc.extractTar(archivePath, process.env.HOME, args)
+    extractedDir = await tc.extractTar(archivePath, installPath, args)
   }
 
   const urlParts = assetURL.split(`/`)
